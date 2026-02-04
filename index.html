@@ -1,0 +1,285 @@
+<html lang="pt-BR" class="theme-pink">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>PAINEL</title>
+<style>
+  /* TEMAS */
+  :root.theme-blue  { --c:#1e90ff; --c-dark:#005bbb; --grad:linear-gradient(90deg,#007bff,#1e90ff); --bg:#000; --fg:#fff; }
+  :root.theme-yellow{ --c:#ffd60a; --c-dark:#b38b00; --grad:linear-gradient(90deg,#ffc300,#ffd60a); --bg:#000; --fg:#fff; }
+  :root.theme-pink  { --c:#ff2d95; --c-dark:#b0005f; --grad:linear-gradient(90deg,#ff0080,#ff4da6); --bg:#000; --fg:#fff; }
+  :root.theme-orange{ --c:#ff8c00; --c-dark:#cc7000; --grad:linear-gradient(90deg,#ff7b00,#ffae00); --bg:#000; --fg:#fff; }
+
+  body{
+    margin:0; font-family:Arial, sans-serif;
+    background:linear-gradient(270deg,#000,#111,#000);
+    background-size:600% 600%;
+    animation:bgMove 20s ease infinite;
+    color:var(--fg);
+    height:100vh; display:flex; align-items:center; justify-content:center;
+  }
+  @keyframes bgMove {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
+  .panel, .login{
+    background:rgba(0,0,0,0.75);
+    border:2px solid var(--c);
+    border-radius:16px; padding:24px;
+    width:90%; max-width:420px;
+    box-shadow:0 0 20px var(--c);
+  }
+  .panel h2, .login h2{
+    margin:0 0 18px; font-size:22px;
+    color:var(--c); text-shadow:0 0 10px var(--c);
+    text-align:center;
+  }
+
+  .panel-inner{
+    display:flex; gap:16px; align-items:flex-start;
+  }
+
+  /* TABS à esquerda, coluna */
+  .tabs{
+    display:flex; flex-direction:column;
+    gap:10px; align-items:flex-start; justify-content:flex-start;
+  }
+  .tab-btn{
+    background:#000; color:#fff;
+    border:2px solid var(--c);
+    padding:8px 18px;
+    border-radius:12px;
+    cursor:pointer; font-weight:bold;
+    box-shadow:0 0 12px var(--c);
+  }
+  .tab-btn.active{
+    box-shadow:0 0 18px var(--c);
+  }
+
+  .tab-wrap{ flex:1; }
+
+  .tab-content{ display:none; text-align:left; }
+  .tab-content.active{ display:block; }
+
+  label.row{ display:flex; align-items:center; gap:10px; margin:10px 0; font-size:16px; }
+  input[type="checkbox"], input[type="radio"]{ transform:scale(1.2); accent-color:var(--c); }
+
+  input[type="range"]{ width:100%; margin:14px 0; accent-color:var(--c); }
+  .fov{ text-align:right; font-size:14px; opacity:.9; }
+
+  select{
+    width:100%; padding:10px; margin:10px 0;
+    border-radius:8px; border:1px solid var(--c);
+    background:#000; color:#fff; font-size:15px;
+  }
+
+  .cta{
+    width:100%; padding:14px; margin-top:12px;
+    border:none; border-radius:10px;
+    background:var(--grad); color:#fff;
+    font-weight:bold; cursor:pointer;
+    box-shadow:0 0 14px var(--c);
+  }
+  .progress{
+    width:100%; background:#111;
+    border:1px solid var(--c);
+    height:16px; border-radius:16px;
+    overflow:hidden; margin-top:10px; display:none;
+  }
+  .progress-bar{
+    height:100%; width:0%;
+    background:var(--grad);
+    box-shadow:0 0 10px var(--c);
+    transition:width .2s linear;
+  }
+  .muted{ font-size:14px; margin-top:10px; color:#00ff88; display:none; }
+
+  .login{text-align:center;}
+  .login input{
+    width:90%; padding:10px; margin:10px 0;
+    border-radius:8px; border:1px solid var(--c);
+    background:#000; color:#fff; font-size:15px;
+    text-align:center;
+  }
+  .error{ color:#ff4d4d; margin-top:8px; display:none; }
+  
+  #appStoreLink {
+    display: none;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  #appStoreLink a {
+    color: var(--c);
+    text-decoration: none;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+  <div class="login" id="loginBox" style="display: block;">
+    <h2>Login Syzeffz</h2>
+    <input type="password" id="key" placeholder="Insira sua KEY"><br>
+    <button class="cta" onclick="doLogin()">Entrar</button>
+    <div class="error" id="loginError">Key inválida</div>
+  </div>
+
+  <div class="panel" id="panel" style="display: none;">
+    <h2>Syzeffz</h2>
+
+    <div class="panel-inner">
+      <div class="tabs">
+        <button class="tab-btn" onclick="openTab('aba1', this)">Aim</button>
+        <button class="tab-btn" onclick="openTab('aba2', this)">Visual</button>
+        <button class="tab-btn active" onclick="openTab('aba3', this)">Extra</button>
+      </div>
+
+      <div class="tab-wrap">
+        <div class="tab-content" id="aba1">
+          <label class="row"><input type="checkbox"> Aim Assist</label>
+          <label class="row"><input type="checkbox"> Aim Smooth</label>
+          <label class="row"><input type="checkbox"> Fix Velocidade da mira</label>
+
+          <input type="range" min="0" max="100" value="5" oninput="document.getElementById('fovVal').textContent=this.value">
+          <div class="fov">Intensidade <span id="fovVal">5</span></div>
+
+          <select>
+            <option>Prioridade Cabeça</option>
+            <option>Prioridade Pescoço</option>
+          </select>
+
+          <button class="cta" id="injectBtn" onclick="injectEabrir()">INJECTAR</button>
+          <div class="progress" id="progress">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <p class="muted" id="msg"></p>
+          <div id="appStoreLink">
+            <a href="https://apps.apple.com/app/free-fire/id1300096749" target="_blank">
+              🔗 Clique aqui para abrir Free Fire
+            </a>
+          </div>
+        </div>
+
+        <div class="tab-content" id="aba2">
+          <h3 style="color:var(--c); text-align:center; margin-top:0;">Configurações Visuais</h3>
+          <label class="row"><input type="checkbox"> Grudar na cabeça 65%</label>
+          <label class="row"><input type="checkbox"> Grudar na cabeça 80%</label>
+          <label class="row"><input type="checkbox"> Grudar na cabeça total</label>
+          <label class="row"><input type="checkbox"> Otimização</label>
+        </div>
+
+        <div class="tab-content active" id="aba3">
+          <h3 style="color:var(--c); text-align:center; margin-top:0;">Extras</h3>
+          <div style="margin:10px 0;">
+            <div style="margin-bottom:6px;">🎨 Tema</div>
+            <select onchange="setTheme(this.value)">
+              <option value="blue">Azul</option>
+              <option value="yellow">Amarelo</option>
+              <option value="pink" selected>Rosa</option>
+              <option value="orange">Laranja</option>
+            </select>
+          </div>
+          <label class="row"><input type="checkbox"> Mostrar logs</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function doLogin(){
+    const key = document.getElementById("key").value.trim();
+    if(key === "55"){
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("panel").style.display = "block";
+    } else {
+      document.getElementById("loginError").style.display = "block";
+    }
+  }
+
+  function openTab(id, btn){
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function setTheme(name){
+    document.documentElement.className = 'theme-' + name;
+  }
+
+  function executarInjectSimulado(){
+    return new Promise(resolve => {
+      const bar = document.getElementById("progressBar");
+      const wrap = document.getElementById("progress");
+      const msg = document.getElementById("msg");
+      wrap.style.display="block";
+      msg.style.display="block";
+      msg.textContent="Processando inject...";
+      let w=0;
+      const interval=setInterval(()=>{
+        w+=10;
+        bar.style.width=w+"%";
+        if(w>=100){
+          clearInterval(interval);
+          msg.textContent="✅ Inject concluído!";
+          resolve();
+        }
+      },200);
+    });
+  }
+
+  function abrirFreeFireIOS() {
+    const msg = document.getElementById("msg");
+    const appStoreLink = document.getElementById("appStoreLink");
+    const freefireURLs = ["freefire://", "com.dts.freefireth://", "com.dts.freefire://"];
+    
+    let opened = false;
+    for (let i = 0; i < freefireURLs.length; i++) {
+      try {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = freefireURLs[i];
+        document.body.appendChild(iframe);
+        setTimeout(() => { if (iframe.parentNode) document.body.removeChild(iframe); }, 100);
+        window.location.href = freefireURLs[i];
+        opened = true;
+        break;
+      } catch (e) {}
+    }
+    
+    if (!opened) {
+      msg.textContent = "⚠️ Clique no link abaixo para abrir o Free Fire";
+      appStoreLink.style.display = "block";
+    }
+  }
+
+  function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
+
+  async function injectEabrir(){
+    try{
+      await executarInjectSimulado();
+      if (isIOS()) {
+        abrirFreeFireIOS();
+      } else {
+        window.location.href = "freefire://";
+      }
+    }catch(e){
+      document.getElementById("msg").textContent = "Erro: " + e.message;
+    }
+  }
+
+  document.getElementById("key").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      doLogin();
+    }
+  });
+</script>
+
+</body>
+</html>
